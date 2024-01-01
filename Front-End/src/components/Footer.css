@@ -1,0 +1,22 @@
+.footer {
+    padding: 20px;
+    margin-top: 10px;
+    background-color: #557C55;
+    display: flex;
+}
+
+.footerstatement {
+
+    color: white;
+    font-weight: 400;
+}
+
+.SocialMediaLinks {
+    justify-self: center;
+    
+}
+
+.border {
+    border-width: thick;
+    border-color: black;
+}

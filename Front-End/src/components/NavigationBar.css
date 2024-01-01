@@ -1,0 +1,20 @@
+
+body{
+   text-decoration: none;
+}
+
+.right{
+    display:flex;
+    position:absolute;
+    right: 5rem;
+    }
+
+.textcolor{
+    color:rgb(245, 244, 244);
+    text-decoration: none;
+}
+
+.bar{
+        background-color:  #557c55;
+        font-weight:500;
+}
