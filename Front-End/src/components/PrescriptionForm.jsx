@@ -1,22 +1,46 @@
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 import "./PrescriptionForm.css";
 import PatientHistory from "./PatientHistory";
 
 export default function MedicalReport() {
-  const [medicalData, setMedicalData] = useState({});
+  const [medicalData, setMedicalData] = useState({
+    patientMedicalHistoryDto: {
+      visitDate: "",
+      symptoms: "",
+      suggestion: "",
+      patientId: "" // No default patient ID
+    },
+    medicineDto: []
+  });
   const [responseData, setResponseData] = useState({});
 
   function handleInput(event) {
-    const name = event.target.name;
-    let value = event.target.value;
-
-    if (name === "patientId" && value !== "") {
-      value = parseInt(value, 10);
+    const { name, value } = event.target;
+    const updatedData = { ...medicalData };
+    if (name === "medicine" || name === "dosage" || name === "duration") {
+      // If medicine field, update the last medicine in the array
+      const lastMedicineIndex = updatedData.medicineDto.length - 1;
+      updatedData.medicineDto[lastMedicineIndex][name] = value;
+    } else {
+      // Otherwise, update patient medical history
+      updatedData.patientMedicalHistoryDto[name] = value;
     }
+    setMedicalData(updatedData);
+  }
 
+  function addMedicineField() {
+    setMedicalData((prevData) => ({
+      ...prevData,
+      medicineDto: [...prevData.medicineDto, { medicine: "", dosage: "", duration: "" }]
+    }));
+  }
+
+  function removeMedicineField(index) {
     setMedicalData((prevData) => {
-      return { ...prevData, [name]: value };
+      const updatedMedicineDto = [...prevData.medicineDto];
+      updatedMedicineDto.splice(index, 1);
+      return { ...prevData, medicineDto: updatedMedicineDto };
     });
   }
 
@@ -24,26 +48,13 @@ export default function MedicalReport() {
     event.preventDefault();
     console.log(medicalData);
 
-    const cleanedData = Object.fromEntries(
-      Object.entries(medicalData).map(([key, value]) => [
-        key,
-        value === undefined ? null : value,
-      ])
-    );
-
     let url = "http://localhost:8080/report";
 
     axios
-      .post(url, cleanedData)
+      .post(url, medicalData)
       .then((response) => {
         setResponseData(response.data);
-        // if (response.data.status) {
-          alert("Medical report submitted successfully!");
-        // } else {
-          // alert("Failed to submit medical report.");
-        // }
-        
-
+        alert("Medical report submitted successfully!");
       })
       .catch((error) => {
         console.error("Error submitting medical report:", error);
@@ -53,7 +64,6 @@ export default function MedicalReport() {
 
   return (
     <div className="report">
-
       <div className="history">
         <PatientHistory />
       </div>
@@ -63,25 +73,89 @@ export default function MedicalReport() {
         <h1>{responseData.customerId}</h1>
         
         <form onSubmit={medicalReport}>
-          <label htmlFor="patientId">Patient ID :</label>
-          <input type="text" name="patientId" onChange={handleInput} /> <br />
-          <label htmlFor="visitDate">Visiting Date :</label>
-          <input type="date" name="visitDate" onChange={handleInput} /> <br />
-          <label htmlFor="doctorName">Doctor Name :</label>
-          <input type="text" name="doctorName" onChange={handleInput} /> <br />
-          <label htmlFor="symptoms">Symptoms :</label>
-          <input type="text" name="symptoms" onChange={handleInput} /> <br />
-          <label htmlFor="medicine">Medicines :</label>
-          <input type="text" name="medicine" onChange={handleInput} /> <br />
-          <label htmlFor="suggestion">Suggestions :</label>
-          <input type="text" name="suggestion" onChange={handleInput} /> <br />
+          <div className="form-group">
+            <label htmlFor="patientId">Patient ID:</label>
+            <input
+              type="text"
+              name="patientId"
+              value={medicalData.patientMedicalHistoryDto.patientId}
+              onChange={(e) => handleInput(e)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="visitDate">Visiting Date:</label>
+            <input
+              type="date"
+              name="visitDate"
+              value={medicalData.patientMedicalHistoryDto.visitDate}
+              onChange={(e) => handleInput(e)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="symptoms">Symptoms:</label>
+            <input
+              type="text"
+              name="symptoms"
+              value={medicalData.patientMedicalHistoryDto.symptoms}
+              onChange={(e) => handleInput(e)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="suggestion">Suggestions:</label>
+            <input
+              type="text"
+              name="suggestion"
+              value={medicalData.patientMedicalHistoryDto.suggestion}
+              onChange={(e) => handleInput(e)}
+            />
+          </div>
+          {medicalData.medicineDto.map((medicine, index) => (
+            <div key={index}>
+              <div className="form-group">
+                <label htmlFor={`medicine-${index}`}>Medicine:</label>
+                <input
+                  type="text"
+                  name="medicine"
+                  value={medicine.medicine}
+                  onChange={(e) => handleInput(e)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor={`dosage-${index}`}>Dosage:</label>
+                <input
+                  type="text"
+                  name="dosage"
+                  value={medicine.dosage}
+                  onChange={(e) => handleInput(e)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor={`duration-${index}`}>Duration:</label>
+                <input
+                  type="text"
+                  name="duration"
+                  value={medicine.duration}
+                  onChange={(e) => handleInput(e)}
+                />
+              </div>
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeMedicineField(index)}
+                >
+                  Remove Medicine
+                </button>
+              )}
+            </div>
+          ))}
+          <button type="button" onClick={addMedicineField}>
+            Add Medicine
+          </button>
           <button type="submit" id="button">
             Submit Medical Report
           </button>
         </form>
-
       </div>
-
     </div>
   );
 }

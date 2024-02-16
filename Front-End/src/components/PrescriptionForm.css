@@ -3,49 +3,109 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.report {
+  margin-top: 20px;
+  display: flex;
+}
+
+.history {
+  margin-right: 10px;
+}
+
 .medical-report-container {
   width: 800px;
-  height: 600px;
-  margin-top: 30px;
-  padding-top: 20px;
-  margin-left: 80px;
-  padding: 20px;
-  margin-right: 20px;
+  margin-top: 20px;
+  margin-left: 50px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.report {
-  margin-top: 40px;
-
-  display: flex;
-}
 
 #head {
   text-align: center;
-}
-label {
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
   margin-bottom: 10px;
 }
 
-#button {
-  margin-top: 20px;
+.form-group {
+  margin-bottom: 10px;
 }
-button[type="submit"] {
+
+label {
+  display: block;
+  margin-bottom: 3px;
+}
+
+input[type="text"],
+input[type="date"] {
+  width: calc(100% - 20px);
+  padding: 5px;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+button[type="submit"],
+button[type="button"] {
   background-color: #007bff;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 8px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+button[type="button"] {
+  background-color: #0b6a26;
+  margin-left: 10px;
+}
+
+button[type="button"]:hover {
+  background-color: #c82333;
+}
+
+.download-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-button button {
+  background-color: #28a745;
+}
+
+.download-button button:hover {
+  background-color: #218838;
+}
+
+/* Pagination CSS */
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 3px;
   cursor: pointer;
 }
 
-button[type="submit"]:hover {
+.page-link:hover {
   background-color: #0056b3;
 }

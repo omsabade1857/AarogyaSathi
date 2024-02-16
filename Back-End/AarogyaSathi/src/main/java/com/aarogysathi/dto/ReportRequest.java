@@ -1,9 +1,11 @@
 package com.aarogysathi.dto;
 
+import java.util.List;
+
 public class ReportRequest {
 
 	private PatientMedicalHistoryDto patientMedicalHistoryDto;
-	private MedicineDto medicineDto;
+	private List<MedicineDto> medicineDto;
 
 	public PatientMedicalHistoryDto getPatientMedicalHistoryDto() {
 		return patientMedicalHistoryDto;
@@ -13,11 +15,11 @@ public class ReportRequest {
 		this.patientMedicalHistoryDto = patientMedicalHistoryDto;
 	}
 
-	public MedicineDto getMedicineDto() {
+	public List<MedicineDto> getMedicineDto() {
 		return medicineDto;
 	}
 
-	public void setMedicineDto(MedicineDto medicineDto) {
+	public void setMedicineDto(List<MedicineDto> medicineDto) {
 		this.medicineDto = medicineDto;
 	}
 

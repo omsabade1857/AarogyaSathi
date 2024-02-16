@@ -71,34 +71,42 @@ public class PatientMedicalHistoryService {
 
 	@Autowired
 	PatientMedicalHistoryRepository historyRepo;
-	
+
 		@Transactional
 		public void addPatientMedicalHistory(PatientMedicalHistory patienthistory){
 
-			
+
 			PatientMedicalHistory patientSavedHistory=	historyRepo.save(patienthistory);
 			 try {
-			     
+
 			        RegistrationStatus reg = new RegistrationStatus();
 			        reg.setStatus(true);
 			        reg.setMessage("Patient report done!!");
 			    } catch (Exception e) {
-			     
+
 			        RegistrationStatus reg = new RegistrationStatus();
 			        reg.setStatus(false);
 			        reg.setMessage("Registration failed: " + e.getMessage());
 			    }
-			
-			
+
+
 		}
-		
-		public Optional<PatientMedicalHistory> getPatientById(int patientId) {	
+
+		public Optional<PatientMedicalHistory> getPatientById(int patientId) {
 			return historyRepo.findById(patientId);
 		}
-		
+
 		public List<PatientMedicalHistory> getMedicalHistoryByPatientId(int patientId) {
 			return historyRepo.findByPatient_PatientId(patientId);
 		}
+
+		 public PatientMedicalHistory getLatestMedicalHistoryByPatientId(int patientId) {
+		        List<PatientMedicalHistory> medicalHistoryList = historyRepo.findByPatient_PatientIdOrderByVisitDateDesc(patientId);
+		        if (!medicalHistoryList.isEmpty()) {
+		            return medicalHistoryList.get(0);
+		        }
+		        return null;
+		 }
 }
 
 
