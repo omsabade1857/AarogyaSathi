@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,12 +35,12 @@ public class Patient {
 	
 	@JsonIgnore
 	//fetch = FetchType.EAGER
-	@OneToMany(mappedBy ="patient" )
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
 	private List<PatientMedicalHistory> patientMedicalHistory;
 	
 	@JsonIgnore
 	//fetch = FetchType.EAGER
-	@OneToMany(mappedBy ="patient" )
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
 		
 	public enum Gender{

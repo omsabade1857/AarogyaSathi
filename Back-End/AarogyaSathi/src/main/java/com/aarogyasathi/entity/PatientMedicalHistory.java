@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name = "as_patient_history")
 public class PatientMedicalHistory {

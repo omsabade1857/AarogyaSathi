@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class Doctor {
 	private String mobileNo;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy ="doctor" , fetch = FetchType.EAGER)
+	@OneToMany(mappedBy ="doctor" , fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
 	
 	public int getDoctorId() {

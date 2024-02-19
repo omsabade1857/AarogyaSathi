@@ -14,30 +14,29 @@ export default function MedicalReport() {
     medicineDto: []
   });
   const [responseData, setResponseData] = useState({});
+  const [records, setRecords] = useState([]);
 
   function handleInput(event) {
     const { name, value } = event.target;
     const updatedData = { ...medicalData };
     if (name === "medicine" || name === "dosage" || name === "duration") {
-      // If medicine field, update the last medicine in the array
       const lastMedicineIndex = updatedData.medicineDto.length - 1;
       updatedData.medicineDto[lastMedicineIndex][name] = value;
     } else {
-      // Otherwise, update patient medical history
       updatedData.patientMedicalHistoryDto[name] = value;
     }
     setMedicalData(updatedData);
   }
 
   function addMedicineField() {
-    setMedicalData((prevData) => ({
+    setMedicalData(prevData => ({
       ...prevData,
       medicineDto: [...prevData.medicineDto, { medicine: "", dosage: "", duration: "" }]
     }));
   }
 
   function removeMedicineField(index) {
-    setMedicalData((prevData) => {
+    setMedicalData(prevData => {
       const updatedMedicineDto = [...prevData.medicineDto];
       updatedMedicineDto.splice(index, 1);
       return { ...prevData, medicineDto: updatedMedicineDto };
@@ -52,14 +51,26 @@ export default function MedicalReport() {
 
     axios
       .post(url, medicalData)
-      .then((response) => {
+      .then(response => {
         setResponseData(response.data);
         alert("Medical report submitted successfully!");
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error submitting medical report:", error);
         alert("An error occurred while submitting the medical report.");
       });
+
+    setRecords([...records, medicalData]);
+
+    setMedicalData({
+      patientMedicalHistoryDto: {
+        visitDate: "",
+        symptoms: "",
+        suggestion: "",
+        patientId: "" // No default patient ID
+      },
+      medicineDto: []
+    });
   }
 
   return (
@@ -68,10 +79,10 @@ export default function MedicalReport() {
         <PatientHistory />
       </div>
 
-      <div className="medical-report-container">
+      <div className="medical-report-container  pulse">
         <h2 id="head">Patient Medical Report</h2>
         <h1>{responseData.customerId}</h1>
-        
+
         <form onSubmit={medicalReport}>
           <div className="form-group">
             <label htmlFor="patientId">Patient ID:</label>
@@ -79,34 +90,38 @@ export default function MedicalReport() {
               type="text"
               name="patientId"
               value={medicalData.patientMedicalHistoryDto.patientId}
-              onChange={(e) => handleInput(e)}
+              onChange={handleInput}
             />
           </div>
           <div className="form-group">
             <label htmlFor="visitDate">Visiting Date:</label>
             <input
+              required
               type="date"
               name="visitDate"
               value={medicalData.patientMedicalHistoryDto.visitDate}
-              onChange={(e) => handleInput(e)}
+              onChange={handleInput}
             />
           </div>
           <div className="form-group">
             <label htmlFor="symptoms">Symptoms:</label>
             <input
+              required
+              pattern="^[a-zA-Z\s]+$"
               type="text"
               name="symptoms"
               value={medicalData.patientMedicalHistoryDto.symptoms}
-              onChange={(e) => handleInput(e)}
+              onChange={handleInput}
             />
           </div>
           <div className="form-group">
             <label htmlFor="suggestion">Suggestions:</label>
             <input
+              required
               type="text"
               name="suggestion"
               value={medicalData.patientMedicalHistoryDto.suggestion}
-              onChange={(e) => handleInput(e)}
+              onChange={handleInput}
             />
           </div>
           {medicalData.medicineDto.map((medicine, index) => (
@@ -114,33 +129,38 @@ export default function MedicalReport() {
               <div className="form-group">
                 <label htmlFor={`medicine-${index}`}>Medicine:</label>
                 <input
+                  required
                   type="text"
                   name="medicine"
                   value={medicine.medicine}
-                  onChange={(e) => handleInput(e)}
+                  onChange={handleInput}
                 />
               </div>
               <div className="form-group">
                 <label htmlFor={`dosage-${index}`}>Dosage:</label>
                 <input
+                  required
                   type="text"
                   name="dosage"
                   value={medicine.dosage}
-                  onChange={(e) => handleInput(e)}
+                  onChange={handleInput}
                 />
               </div>
               <div className="form-group">
                 <label htmlFor={`duration-${index}`}>Duration:</label>
                 <input
+                  required
+                  className="form-control"
                   type="text"
                   name="duration"
                   value={medicine.duration}
-                  onChange={(e) => handleInput(e)}
+                  onChange={handleInput}
                 />
               </div>
               {index > 0 && (
                 <button
                   type="button"
+                  className="btn btn-danger mb-1"
                   onClick={() => removeMedicineField(index)}
                 >
                   Remove Medicine
@@ -148,11 +168,15 @@ export default function MedicalReport() {
               )}
             </div>
           ))}
-          <button type="button" onClick={addMedicineField}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={addMedicineField}
+          >
             Add Medicine
           </button>
-          <button type="submit" id="button">
-            Submit Medical Report
+          <button type="submit" className="btn btn-primary mx-5">
+            Submit Report
           </button>
         </form>
       </div>

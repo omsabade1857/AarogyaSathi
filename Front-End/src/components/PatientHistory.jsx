@@ -69,15 +69,15 @@ export default function PatientHistory() {
       />
 
       <button
-        type="button"
+        type="button" className="btn btn-primary"
         onClick={searchPatientHistory}
         disabled={!patientId || loading}
       >
-        {loading ? "Searching..." : "Search Medical History"}
+        {loading ? "Searching..." : "Search History"}
       </button>
 
-      <button type="button" onClick={downloadMedicalHistory}>
-        Download Medical History
+      <button type="button" className="btn btn-primary m-2" disabled={!patientId || loading} onClick={downloadMedicalHistory}>
+        Download
       </button>
 
       {error && <p className="error-message">{error}</p>}
@@ -90,7 +90,7 @@ export default function PatientHistory() {
               <tr>
                 <th>Visiting Date</th>
                 <th>Symptoms</th>
-                <th>Medicines</th>
+                <th>Medicines & Dosage</th>
                 <th>Suggestions</th>
               </tr>
             </thead>
@@ -115,7 +115,7 @@ export default function PatientHistory() {
       )}
 
       {medicalHistory.length === 0 && !error && !loading && (
-        <p>No medical history found for the specified patient ID.</p>
+        <p className="text-muted">No medical history found for the specified patient ID.</p>
       )}
     </div>
   );

@@ -1,12 +1,22 @@
 package com.aarogysathi.dto;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class AppointmentUpdateRequest {
 
 	    private LocalDate newDate;
+	    private LocalTime newTime;
 
 
-	    public LocalDate getNewDate() {
+	    public LocalTime getNewTime() {
+			return newTime;
+		}
+
+		public void setNewTime(LocalTime newTime) {
+			this.newTime = newTime;
+		}
+
+		public LocalDate getNewDate() {
 	        return newDate;
 	    }
 

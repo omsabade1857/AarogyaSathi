@@ -11,6 +11,8 @@ import com.aarogyasathi.entity.Patient;
 import com.aarogyasathi.exception.PatientServiceException;
 import com.aarogyasathi.repository.PatientRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PatientService {
 
@@ -36,7 +38,6 @@ public class PatientService {
      
        return foundPatient;
     }
-	
 	public Patient login(String email, String password) throws PatientServiceException{
 		Optional<Patient> patient = patientRepo.findByEmailAndPassword(email, password);
 		if(patient.isPresent())
@@ -49,6 +50,54 @@ public class PatientService {
 		List<Patient> ListPatient=patientRepo.findAll();
 		return ListPatient;
 	}
-	
-	
-}
+	 public Patient updatePatient(int patientId, Patient updatedPatient) {
+	        Optional<Patient> patientOptional = patientRepo.findById(patientId);
+
+	        if (patientOptional.isPresent()) {
+	            Patient existingPatient = patientOptional.get();
+
+	            // Update non-null fields only
+	            if (updatedPatient.getName() != null) {
+	                existingPatient.setName(updatedPatient.getName());
+	            }
+	            if (updatedPatient.getEmail() != null) {
+	                existingPatient.setEmail(updatedPatient.getEmail());
+	            }
+	            if (updatedPatient.getPassword() != null) {
+	                existingPatient.setPassword(updatedPatient.getPassword());
+	            }
+	            if (updatedPatient.getMobileNo() != 0) {
+	                existingPatient.setMobileNo(updatedPatient.getMobileNo());
+	            }
+	            if (updatedPatient.getDateOfBirth() != null) {
+	                existingPatient.setDateOfBirth(updatedPatient.getDateOfBirth());
+	            }
+	            if (updatedPatient.getCity() != null) {
+	                existingPatient.setCity(updatedPatient.getCity());
+	            }
+	            if (updatedPatient.getGender() != null) {
+	                existingPatient.setGender(updatedPatient.getGender());
+	            }
+
+	            // Save the updated patient
+	            return patientRepo.save(existingPatient);
+	        } 
+	        else {
+	        	return null;
+	        }
+	        }
+	 
+	 
+	 
+	 @Transactional
+	    public void deletePatient(int patientId) {
+	        Optional<Patient> patientOptional = patientRepo.findById(patientId);
+	        if (patientOptional.isPresent()) {
+	            Patient patient = patientOptional.get();
+	            patientRepo.delete(patient);
+	        } else {
+	            
+	        }
+	    }
+	 
+	    }

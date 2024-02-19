@@ -9,13 +9,18 @@ import com.aarogyasathi.entity.Doctor;
 import com.aarogyasathi.entity.Patient;
 import com.aarogyasathi.exception.DoctorServiceException;
 import com.aarogyasathi.exception.PatientServiceException;
+import com.aarogyasathi.repository.AppointmentRepository;
 import com.aarogyasathi.repository.DoctorRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class DoctorService {
 
 	@Autowired
 	private DoctorRepository doctorRepo;
+	private AppointmentRepository appointmentRepo;
+	
 	
 	public int addDoctor(Doctor doctor) throws DoctorServiceException{
 		Optional<Doctor> checkDoctor=doctorRepo.findByEmail(doctor.getEmail());
@@ -51,6 +56,48 @@ public class DoctorService {
 		 List<Doctor> allDoctors=doctorRepo.findAll();
 		 return  allDoctors;
 	}
+	 public Doctor updateDoctor(Doctor updatedDoctor) throws DoctorServiceException {
+	       
+	        Optional<Doctor> existingDoctorOptional = doctorRepo.findById(updatedDoctor.getDoctorId());
+
+	        if (existingDoctorOptional.isPresent()) {
+	            Doctor existingDoctor = existingDoctorOptional.get();
+
+	         
+	            if (updatedDoctor.getDoctorName() != null) {
+	                existingDoctor.setDoctorName(updatedDoctor.getDoctorName());
+	            }
+	            if (updatedDoctor.getEmail() != null) {
+	                existingDoctor.setEmail(updatedDoctor.getEmail());
+	            }
+	            if (updatedDoctor.getPassword() != null) {
+	                existingDoctor.setPassword(updatedDoctor.getPassword());
+	            }
+	            if (updatedDoctor.getQualification() != null) {
+	                existingDoctor.setQualification(updatedDoctor.getQualification());
+	            }
+	            if (updatedDoctor.getSpecialization() != null) {
+	                existingDoctor.setSpecialization(updatedDoctor.getSpecialization());
+	            }
+	            if (updatedDoctor.getMobileNo() != null) {
+	                existingDoctor.setMobileNo(updatedDoctor.getMobileNo());
+	            }
+
+	            
+	            return doctorRepo.save(existingDoctor);
+	        } else {
+	            throw new DoctorServiceException("Doctor not found for update.");
+	        }
+	    }
+	 @Transactional
+	    public void deleteDoctor(int doctorId) {
+	        Optional<Doctor> doctorOptional = doctorRepo.findById(doctorId);
+	        if (doctorOptional.isPresent()) {
+	            Doctor doctor = doctorOptional.get();
+	            doctorRepo.delete(doctor);
+	        } else {
+	            
+	        }
+	    }
 	
 }
-
